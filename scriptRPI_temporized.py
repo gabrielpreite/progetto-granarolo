@@ -7,8 +7,7 @@ from threading import Timer
 import mysql.connector
 import os
 
-#uncomment timer class to activate timer
-'''class InfiniteTimer():
+class InfiniteTimer():
     """A Timer class that does not stop, unless you want it to."""
 
     def __init__(self, seconds, target):
@@ -41,7 +40,7 @@ import os
             self._should_continue = False # Just in case thread is running and cancel fails.
             self.thread.cancel()
         else:
-            print("Timer never started or failed to initialize.")'''
+            print("Timer never started or failed to initialize.")
 
 def getMac():
     #get eth0 mac
@@ -58,11 +57,11 @@ def getMac():
     macWlan = macWlan[9:17]
     streamEth = os.popen("cat /sys/class/net/eth0/carrier")
     outEth = streamEth.read()
-    if(outEth == "1"):
+    if(outEth[0] == "1"):
         return macEth
     return macWlan
 
-#def tick():
+def tick():
     humidity, temperature = adht.read_retry(adht.DHT22, 12)
     timestamp = str(time.time())[0:10]
     cursor = db.cursor()
@@ -88,7 +87,5 @@ db = mysql.connector.connect(
     password = "DB_R4CkG",
     database = "temperatura"
 )
-#uncomment to set the interval (es 300ms)for infinite timer
-'''t = InfiniteTimer(300, tick)
-t.start()'''
-
+t = InfiniteTimer(300, tick)
+t.start()
