@@ -63,24 +63,6 @@ def getMac():
     return macWlan
 
 #def tick():
-    humidity, temperature = adht.read_retry(adht.DHT22, 12)
-    timestamp = str(time.time())[0:10]
-    cursor = db.cursor()
-    if humidity is not None and temperature is not None:
-        sqlQuery = "select id_sen from sensore where mac=%s;"
-        mac = getMac()
-        print(mac)
-        val = [mac]
-        cursor.execute(sqlQuery, val)
-        id = cursor.fetchall()[0][0]
-        print(id)
-        val = [id, temperature, humidity, timestamp]
-        sql = "insert into lettura values (null, %s, %s, %s, %s);"
-        cursor.execute(sql, val)
-        db.commit()
-    else:
-	    print("Failed to retrieve data from humidity sensor")
-
 db = mysql.connector.connect(
     host = "devilberry.local",
     port = "3306",
@@ -88,6 +70,25 @@ db = mysql.connector.connect(
     password = "DB_R4CkG",
     database = "temperatura"
 )
+
+humidity, temperature = adht.read_retry(adht.DHT22, 12)
+timestamp = str(time.time())[0:10]
+cursor = db.cursor()
+if humidity is not None and temperature is not None:
+    sqlQuery = "select id_sen from sensore where mac=%s;"
+    mac = getMac()
+    print(mac)
+    val = [mac]
+    cursor.execute(sqlQuery, val)
+    id = cursor.fetchall()[0][0]
+    print(id)
+    val = [id, temperature, humidity, timestamp]
+    sql = "insert into lettura values (null, %s, %s, %s, %s);"
+    cursor.execute(sql, val)
+    db.commit()
+else:
+    print("Failed to retrieve data from humidity sensor")
+
 #uncomment to set the interval (es 300ms)for infinite timer
 '''t = InfiniteTimer(300, tick)
 t.start()'''

@@ -14,15 +14,15 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-f = open("oldlogsC.log", "r")
+f = open("oldlogsS.log", "r")
 file = f.read()
 
 words = word_tokenize(file)
 
 for i in range(int(len(words)/6)):
     timestamp = int(words[i*6][0:10])
-    temperature = float(words[i*6+1][5:9])
+    temperature = float(words[i*6+1][5:])
     humidity = float(words[i*6+4][9:13])
-    sql = "insert into lettura values (null, 1, "+str(temperature)+", "+str(humidity)+", "+str(timestamp)+");"
+    sql = "insert into lettura values (null, 5, "+str(temperature)+", "+str(humidity)+", "+str(timestamp)+");"
     cursor.execute(sql)
     db.commit()
