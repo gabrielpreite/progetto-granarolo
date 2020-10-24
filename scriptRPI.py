@@ -58,7 +58,7 @@ def getMac():
     macWlan = macWlan[9:17]
     streamEth = os.popen("cat /sys/class/net/eth0/carrier")
     outEth = streamEth.read()
-    if(outEth == "1"):
+    if(outEth and outEth[0] == "1"):
         return macEth
     return macWlan
 
